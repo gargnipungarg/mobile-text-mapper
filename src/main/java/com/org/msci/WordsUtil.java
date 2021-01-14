@@ -1,6 +1,5 @@
 package com.org.msci;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -8,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class WordsUtil {
 
@@ -39,7 +37,7 @@ public class WordsUtil {
 	/*public Map<String, Supplier<Stream<String>>> getSolutionsDS() {
 		return solutionsDS;
 	}*/
-	
+
 	public Map<String, List<String>> getSolutionsDS() {
 		return solutionsDS;
 	}
@@ -87,50 +85,110 @@ public class WordsUtil {
 		char[] charArray = input.toCharArray();
 		List<String> stringList = new LinkedList<>();
 		int singleInputNumber = Character.getNumericValue(charArray[index]);
-		if(length > index+1) { 
-			for(int i = 0; i < phoneMapping.get(singleInputNumber).size(); i++){
+		List<Character> mappings = phoneMapping.get(singleInputNumber);
+		if(index > 0) { 
+			for(int i = 0; i < mappings.size(); i++){
+				List<String> nextIterationResult;
 				if(i==0) {		// first time - use recursion and then store the result of that recursion using dynamic programming
-					List<String> nextIterationResult = populateAllWords(input, length, index + 1);   
-					String concatStr = phoneMapping.get(singleInputNumber).get(i).toString();
-					List<String> thisIterationResult = nextIterationResult.stream().map(s-> {
-						String str = concatStr+s;
-						populateDictionary(str);
-						return str;
-					}).collect(Collectors.toList());
-					stringList.addAll(thisIterationResult);
-					solutionsDS.put(input.substring(index+1), nextIterationResult);
+					nextIterationResult = populateAllWords(input, length, index - 1);   
+					solutionsDS.put(input.substring(0,index), nextIterationResult);
 				}else {
 					// get the result stored in dynamic programming data structure
-					//System.out.println(solutionsDS.get(input.substring(index+1)));
-					List<String> result = solutionsDS.get(input.substring(index+1));
-					String concatStr = phoneMapping.get(singleInputNumber).get(i).toString();
-					result = result.stream().map(s-> {
-						String str = concatStr+s;
-						populateDictionary(str);
-						return str;
-					}).collect(Collectors.toList());
-					stringList.addAll(result);
+					nextIterationResult = solutionsDS.get(input.substring(0,index));
 				}
+				String concatStr = mappings.get(i).toString();
+				List<String> thisIterationResult = nextIterationResult.stream()
+						.map(s-> {
+							String str = s+concatStr;
+							populateDictionary(str);
+							return str;
+						})
+						.filter(s -> feasibleString(s,length))
+						.collect(Collectors.toList());
+				stringList.addAll(thisIterationResult);
 			}
-			return stringList;
 		}else{
-			for(int i = 0; i < phoneMapping.get(singleInputNumber).size(); i++)
-				stringList.add(phoneMapping.get(singleInputNumber).get(i).toString());
-			return stringList;
+			for(int i = 0; i < mappings.size(); i++)
+				stringList.add(mappings.get(i).toString());
 		}
+		return stringList;
 	}
 
 	public List<String> generatePhrases(List<String> allWords){
-		List<String> list = new ArrayList<>();
-		Object[] array = this.dictionaryMatches.toArray();
-		for(int i=0; i< array.length-1;i++) {
-			for(int j=i+1; j< array.length ;j++) {
-				if(allWords.contains(array[i].toString() + array[j].toString())) {
-					list.add(array[i].toString() + " "+ array[j].toString());
+
+		return allWords.stream()
+				.filter(s -> plausiblePhrases(s))
+				.filter(s -> checkPhrases(s))
+				.map(s -> getPhrases(s))
+				.collect(Collectors.toList());
+	}
+
+	private boolean plausiblePhrases(String s) {
+		boolean flag = false;
+		for(String word : dictionaryMatches) {
+			if(s.startsWith(word)) {
+				flag = true;
+				break;
+			}
+		}
+		return flag;
+	}
+
+	private boolean checkPhrases(String word) {
+		for(String s : dictionaryMatches) 
+			word = word.contains(s) ? word.replace(s, "") : word;
+			return word == "" ? true : false;
+	}
+
+	private String getPhrases(String word) {
+		//System.out.println(word);
+		int counter = 0;
+		List<String> sortedMatches = dictionaryMatches.stream()
+				.sorted((a, b) -> b.length() - a.length())
+				.collect(Collectors.toList());
+
+		String returnPhrase=word;
+		for(String s : sortedMatches) { 
+			if(counter >= word.length()) 
+				break;
+			if(word.contains(s)) {
+				returnPhrase = returnPhrase.replace(s, s+" ");
+				counter += s.length();
+			}
+		}
+		return returnPhrase.trim();
+	}
+
+	private boolean feasibleString(String str, int inputLength) {
+		boolean flag = false;
+		if(str.length() > inputLength/2) {						
+			for(String s : dictionaryMatches) {
+				if(str.startsWith(s)) {
+					if(str.length()/4 >= 2) {
+						str=str.replace(s, "");
+					}else {
+						flag = true;
+						break;
+					}
+				}
+			}
+		}else {
+			for(String s: dictionaryMatches) {
+				if(str.contains(s)) {
+					flag = true;
+					break;
+				}
+			}
+			if(!flag) {
+				for(String s : dictionaryData) {
+					if(s.contains(str)) {
+						flag = true;
+						break;
+					}
 				}
 			}
 		}
-		return list;
+		return flag;
 	}
 
 	private boolean populateDictionary(String str) {
@@ -152,7 +210,7 @@ public class WordsUtil {
 
 		for(String s: dictionaryMatches) 
 			if(word.indexOf(s) != -1) 
-				word=word.substring(0,word.indexOf(s));
+				word=word.substring(word.indexOf(s)+s.length());
 		if(checkExistInDictionary(word)) {
 			populateDictionaryMatches(word);
 			return true;

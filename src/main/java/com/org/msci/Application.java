@@ -1,10 +1,11 @@
 package com.org.msci;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /*
  * Problem Statement: 
-  
+
   Please read all given below given instruction and consider all scenarios to get the best score*
 
 		Write a program that takes a number and produces all possible phrases consisting of words that match
@@ -30,6 +31,9 @@ public class Application {
 
 	public static void main(String[] args) {
 
+		// Timestamp
+		LocalDateTime now = LocalDateTime.now(); 
+
 		// Input String
 		String str = "";
 		if(args.length > 0 && null != args[0])
@@ -38,20 +42,22 @@ public class Application {
 			System.out.println("Please input a runtime argument and try again.");
 			System.exit(0);
 		}
-		 
+
 		WordsUtil util = new WordsUtil();
-		
+
 		// Populate all possible words in data structure
-		List<String> allWords = util.populateAllWords(str,str.length(),0);
 		//Stream<String> allWords = util.populateAllWordsWithStream(str,str.length(),0);			// With Streams
-		
-		//allWords.stream().forEach(System.out::println);			// print all words
-		
+		List<String> allWords = util.populateAllWords(str,str.length(),str.length()-1);
+
+		//allWords.stream().forEach(System.out::println);
+
 		// Feasible phrases
 		System.out.println("Dictionary Word Matches : ");
 		System.out.println(util.getDictionaryMatches());
 		System.out.println("\nPhrases found : ");
 		util.generatePhrases(allWords).forEach(System.out::println);
-		
+
+		System.out.println("\nCompletion Time : "+(LocalDateTime.now().getSecond() - now.getSecond()) +" seconds");
+
 	}
 }

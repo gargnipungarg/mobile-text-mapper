@@ -7,23 +7,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Dictionary {
-
-	private static final String DICTIONARY_URL = "http://www.mieliestronk.com/corncob_lowercase.txt";
 	
 	public Set<String> populateDictionary() {
-		Set<String> dictionary =  new HashSet<>();
+		Set<String> allWords = new HashSet<>();
 
 		try { 
-			URL oracle = new URL(DICTIONARY_URL);
+			URL oracle = new URL("http://www.mieliestronk.com/corncob_lowercase.txt");
 			BufferedReader in = new BufferedReader(new InputStreamReader(oracle.openStream()));
 			String inputLine;
-			while ((inputLine = in.readLine()) != null)
-				dictionary.add(inputLine);
+			while ((inputLine = in.readLine()) != null) {
+				allWords.add(inputLine);
+			}
 			in.close();
 
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return dictionary;
+		return allWords;
 	}
 }
