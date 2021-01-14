@@ -1,6 +1,6 @@
 ## mobile-text-mapper
 
-# Problem Statement: 
+# Problem Statement
   
   Please read all given below given instruction and consider all scenarios to get the best score*
 
@@ -36,6 +36,10 @@ mvn clean install
 Test:
 
 mvn test
+
+Execute: Needs a runtime argument for which possible phrases need to be evaluated.
+
+Example - java -jar target\mobile-text-mapper-0.0.1-SNAPSHOT.jar 56835282
 
 # Requirements
 
