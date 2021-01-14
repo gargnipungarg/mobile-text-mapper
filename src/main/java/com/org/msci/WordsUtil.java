@@ -81,7 +81,7 @@ public class WordsUtil {
 	}*/
 
 
-	public List<String> populateAllWords(String input, int length, int index) {
+	public List<String> populateWords(String input, int length, int index) {
 		char[] charArray = input.toCharArray();
 		List<String> stringList = new LinkedList<>();
 		int singleInputNumber = Character.getNumericValue(charArray[index]);
@@ -90,7 +90,7 @@ public class WordsUtil {
 			for(int i = 0; i < mappings.size(); i++){
 				List<String> nextIterationResult;
 				if(i==0) {		// first time - use recursion and then store the result of that recursion using dynamic programming
-					nextIterationResult = populateAllWords(input, length, index - 1);   
+					nextIterationResult = populateWords(input, length, index - 1);   
 					solutionsDS.put(input.substring(0,index), nextIterationResult);
 				}else {
 					// get the result stored in dynamic programming data structure
@@ -123,7 +123,7 @@ public class WordsUtil {
 				.collect(Collectors.toList());
 	}
 
-	private boolean plausiblePhrases(String s) {
+	public boolean plausiblePhrases(String s) {
 		boolean flag = false;
 		for(String word : dictionaryMatches) {
 			if(s.startsWith(word)) {
@@ -134,13 +134,13 @@ public class WordsUtil {
 		return flag;
 	}
 
-	private boolean checkPhrases(String word) {
+	public boolean checkPhrases(String word) {
 		for(String s : dictionaryMatches) 
 			word = word.contains(s) ? word.replace(s, "") : word;
 			return word == "" ? true : false;
 	}
 
-	private String getPhrases(String word) {
+	public String getPhrases(String word) {
 		//System.out.println(word);
 		int counter = 0;
 		List<String> sortedMatches = dictionaryMatches.stream()
@@ -159,7 +159,7 @@ public class WordsUtil {
 		return returnPhrase.trim();
 	}
 
-	private boolean feasibleString(String str, int inputLength) {
+	public boolean feasibleString(String str, int inputLength) {
 		boolean flag = false;
 		if(str.length() > inputLength/2) {						
 			for(String s : dictionaryMatches) {
@@ -191,22 +191,22 @@ public class WordsUtil {
 		return flag;
 	}
 
-	private boolean populateDictionary(String str) {
+	public boolean populateDictionary(String str) {
 
 		if(checkExistInDictionary(str)) 
 			populateDictionaryMatches(str);
 		return checkPartialExistInDictionary(str);
 	}
 
-	private boolean checkExistInDictionary(String word) {
+	public boolean checkExistInDictionary(String word) {
 		return dictionaryData.contains(word);
 	}
 
-	private void populateDictionaryMatches(String s) {
+	public void populateDictionaryMatches(String s) {
 		dictionaryMatches.add(s);
 	}
 
-	private boolean checkPartialExistInDictionary(String word) {
+	public boolean checkPartialExistInDictionary(String word) {
 
 		for(String s: dictionaryMatches) 
 			if(word.indexOf(s) != -1) 

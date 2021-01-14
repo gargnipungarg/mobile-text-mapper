@@ -47,7 +47,7 @@ public class Application {
 
 		// Populate all possible words in data structure
 		//Stream<String> allWords = util.populateAllWordsWithStream(str,str.length(),0);			// With Streams
-		List<String> allWords = util.populateAllWords(str,str.length(),str.length()-1);
+		List<String> allWords = util.populateWords(str,str.length(),str.length()-1);
 
 		//allWords.stream().forEach(System.out::println);
 
