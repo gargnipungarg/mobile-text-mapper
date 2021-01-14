@@ -1,5 +1,7 @@
 ## mobile-text-mapper
 
+========================================================================================================================================================================
+
 # Problem Statement
   
   Please read all given below given instruction and consider all scenarios to get the best score*
@@ -21,12 +23,14 @@
 		Please provide a full solution. Please pay close attention to the performance. The code must work fast
 		and be scalable. Please test on a long number (for instance 20 digits) and measure time.
     
-    
+ ========================================================================================================================================================================   
   
 # Solution
 
 Solution involves dynamic programming to reduce recursion calls and uses streams and filters to reduce the huge data strucutre that can be created with a string of length 20+.
-  
+ 
+ ========================================================================================================================================================================
+ 
 # Commands
 
 Build:
@@ -41,7 +45,21 @@ Execute: Needs a runtime argument for which possible phrases need to be evaluate
 
 Example - java -jar target\mobile-text-mapper-0.0.1-SNAPSHOT.jar 56835282
 
+Sample Output -
+Dictionary Word Matches :
+[lot, loud, love, lava, java, flat, jot]
+
+Phrases found :
+loud java
+love java
+loud lava
+love lava
+
+========================================================================================================================================================================
+
 # Requirements
 
 Java 8 and 9 have been used, so please use versions ahead of these. Created with Java 14 jdk.
+
+========================================================================================================================================================================
 
