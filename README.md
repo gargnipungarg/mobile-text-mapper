@@ -1,6 +1,6 @@
-# mobile-text-mapper
+## mobile-text-mapper
 
-Problem Statement: 
+# Problem Statement: 
   
   Please read all given below given instruction and consider all scenarios to get the best score*
 
@@ -23,3 +23,21 @@ Problem Statement:
     
     
   
+# Solution
+
+Solution involves dynamic programming to reduce recursion calls and uses streams and filters to reduce the huge data strucutre that can be created with a string of length 20+.
+  
+# Commands
+
+Build:
+
+mvn clean install
+
+Test:
+
+mvn test
+
+# Requirements
+
+Java 8 and 9 have been used, so please use versions ahead of these. Created with Java 14 jdk.
+
